@@ -31,7 +31,7 @@ def read_file(file: str) -> pandas.DataFrame:
     excel = pandas.ExcelFile(file, engine='openpyxl')
     # проверяем на соответствие образцу количество листов Excel в файле
     if len(excel.sheet_names) > 1:
-        raise pandas.errors.DataError("To many data sheets in file.")
+        raise pandas.errors.DataError("Too many data sheets in file.")
     # проверяем на соответствие образцу заголовки таблицы
     headers = pandas.read_excel(excel, header=None, nrows=3)
     if not check_header(headers):
@@ -46,15 +46,11 @@ def check_header(header: pandas.core.frame.DataFrame) -> bool:
     читаемости.
     """
     try:
-        return (
-            header[0][0] == 'id'
-            and header[1][0] == 'company'
-            and header[2][0] == 'fact'
-            and header[6][0] == 'forecast'
-            and header[2][1] == header[6][1] == 'Qliq'
-            and header[4][1] == header[8][1] == 'Qoil'
-            and header[2][2] == header[4][2] == header[6][2] == header[8][2]
-            and header[3][2] == header[5][2] == header[7][2] == header[9][2]
+        return all([
+            header[0][0] == 'id', header[1][0] == 'company', header[2][0] == 'fact', header[6][0] == 'forecast',
+            header[2][1] == header[6][1] == 'Qliq', header[4][1] == header[8][1] == 'Qoil',
+            header[2][2] == header[4][2] == header[6][2] == header[8][2],
+            header[3][2] == header[5][2] == header[7][2] == header[9][2]]
         )
     except KeyError:
         return False
@@ -96,7 +92,7 @@ def make_report(source: list) -> None:
     df.to_excel('./teams.xlsx', sheet_name='Total', index=False)
 
 
-def pack_data(source, i, total):
+def pack_data(source, i, total) -> None:
     """
     Вынос во вспомогательную функцию тела цикла для улучшения читаемости.
     """
@@ -108,7 +104,7 @@ def pack_data(source, i, total):
     total['Total'].append(source[i+2][1])
 
 
-def base_update(dataframe: pandas.DataFrame):
+def base_update(dataframe: pandas.DataFrame) -> None:
     """
     Создаем экземпляр класса для операций с БД.
     Вызываем его метод для загрузки данных в БД.
