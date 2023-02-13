@@ -70,7 +70,7 @@ class BaseConnector:
                                   q_type=q_type, date=date(*datemark),
                                   value=value)
                 self.current_session.add(unit)
-        print('Грузим данные...')
+        print('Загружаем данные...')
 
     def get_totals(self):
         """
