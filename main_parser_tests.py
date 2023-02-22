@@ -1,11 +1,8 @@
 import datetime
-import os
 import unittest
 import zipfile
 
 import pandas
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 import main_parser
 from base_class import BaseConnector, TableItem
@@ -22,7 +19,22 @@ class TestParser(unittest.TestCase):
         self.assertRaises(
             FileNotFoundError,
             main_parser.get_file,
-            'tesfilenoexcel.txt',
+            'qqq/123.txt',
+        )
+        self.assertRaises(
+            FileNotFoundError,
+            main_parser.get_file,
+            'test_files/123.txt',
+        )
+        self.assertRaises(
+            FileNotFoundError,
+            main_parser.get_file,
+            'test_files/tesfilenoexcel',
+        )
+        self.assertRaises(
+            FileNotFoundError,
+            main_parser.get_file,
+            'test_files/tesfilenoexcel.txt',
         )
         checked = main_parser.get_file(TEST_FILENAME)
         self.assertEqual(checked, TEST_FILENAME)
@@ -31,22 +43,22 @@ class TestParser(unittest.TestCase):
         self.assertRaises(
             zipfile.BadZipFile,
             main_parser.read_file,
-            'tesfilenoexcel.xlsx',
+            'test_files/tesfilenoexcel.xlsx',
         )
         self.assertRaises(
             pandas.errors.DataError,
             main_parser.read_file,
-            'tesfilewrongsheets.xlsx',
+            'test_files/tesfilewrongsheets.xlsx',
         )
         self.assertRaises(
             pandas.errors.DataError,
             main_parser.read_file,
-            'tesfilewrongheader.xlsx',
+            'test_files/tesfilewrongheader.xlsx',
         )
         self.assertRaises(
             pandas.errors.DataError,
             main_parser.read_file,
-            'tesfileempty.xlsx',
+            'test_files/tesfileempty.xlsx',
         )
         checked = main_parser.read_file(TEST_FILENAME)
         self.assertEqual(type(checked), pandas.core.frame.DataFrame)
